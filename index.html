@@ -22,10 +22,6 @@
             --border-light: #e5e7eb;
         }
 
-        * {
-            cursor: none;
-        }
-
         html {
             scroll-behavior: smooth;
         }
@@ -56,17 +52,27 @@
         
         main > section {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        main > section.active {
+            display: block;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        main > section.exiting {
+            animation: fadeOut 0.3s ease-in-out forwards;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        main > section.active {
-            display: block;
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-15px); }
         }
+
 
         .container {
             max-width: 1100px;
@@ -107,14 +113,14 @@
         }
 
         .nav-links { display: flex; gap: 2.5rem; }
-        .nav-links a { text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a { text-decoration: none; font-weight: 500; transition: color 0.3s; cursor: pointer; }
         .nav-links a.active { color: var(--accent); font-weight: 700; }
         body.light-mode .nav-links a { color: #4a5568; }
         body.dark-mode .nav-links a { color: #a0aec0; }
         body.light-mode .nav-links a:hover, body.light-mode .nav-links a.active { color: var(--accent); }
         body.dark-mode .nav-links a:hover, body.dark-mode .nav-links a.active { color: #ffffff; }
 
-        .theme-switcher { font-size: 1.5rem; }
+        .theme-switcher { font-size: 1.5rem; cursor: pointer; }
 
         /* Hero Section */
         #home {
@@ -173,6 +179,7 @@
             border: none;
             opacity: 0;
             animation: fadeIn 1s ease 1.5s forwards;
+            cursor: pointer;
         }
         .btn:hover { background-color: var(--accent-hover); transform: scale(1.05); }
 
@@ -244,15 +251,42 @@
         .skills-marquee::after { right: 0; background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%); }
         .skills-track { display: flex; width: calc(150px * 24); animation: scroll-logos 40s linear infinite; }
         .skill-icon { width: 100px; height: 50px; margin: 0 25px; display: flex; align-items: center; justify-content: center; }
-        .skill-icon svg { height: 35px; width: auto; fill: #a0aec0; transition: fill 0.3s; }
-        body.light-mode .skill-icon svg { fill: #4a5568; }
-        .skill-icon:hover svg { fill: var(--accent); }
+        .skill-icon svg { height: 35px; width: auto; transition: transform 0.3s; }
+        .skill-icon:hover svg { transform: scale(1.1); }
         @keyframes scroll-logos { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* Projects Page */
-        .projects-section h1 { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 4rem; }
+        .projects-section h1 { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .project-filters { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+        .filter-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .filter-btn.active {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
         .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-        .project-card { background-color: var(--primary-bg); border-radius: 12px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid var(--border-color); }
+        .project-card {
+            background-color: var(--primary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s, opacity 0.4s, scale 0.4s;
+        }
+        .project-card.hidden {
+            opacity: 0;
+            transform: scale(0.9);
+            transition-duration: 0.3s;
+            pointer-events: none;
+        }
         .project-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
         .project-card img { width: 100%; height: 200px; object-fit: cover; }
         .project-content { padding: 1.5rem; }
@@ -299,11 +333,28 @@
         /* Footer */
         footer { text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px solid var(--border-color); }
 
-        /* Custom Cursor */
-        .cursor-dot, .cursor-outline { position: fixed; top: 0; left: 0; pointer-events: none; border-radius: 50%; z-index: 9999; }
-        .cursor-dot { width: 8px; height: 8px; background-color: var(--accent); transform: translate(-50%, -50%); }
-        .cursor-outline { width: 40px; height: 40px; border: 2px solid var(--accent); transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background-color 0.2s; }
-        .cursor-outline.hover { width: 60px; height: 60px; background-color: rgba(139, 92, 246, 0.1); }
+        /* Custom Cursor for Desktop */
+        .cursor-dot, .cursor-outline {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 9999;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            * {
+                cursor: none;
+            }
+            .cursor-dot, .cursor-outline {
+                display: block;
+            }
+            .cursor-dot { width: 8px; height: 8px; background-color: var(--accent); transform: translate(-50%, -50%); }
+            .cursor-outline { width: 40px; height: 40px; border: 2px solid var(--accent); transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+            .cursor-outline.hover { width: 60px; height: 60px; background-color: rgba(139, 92, 246, 0.1); }
+        }
 
         /* Back to Top Button */
         #back-to-top {
@@ -323,12 +374,13 @@
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            cursor: pointer;
         }
         #back-to-top.show { opacity: 1; visibility: visible; }
         #back-to-top:hover { background-color: var(--accent-hover); transform: scale(1.1); }
 
         /* Mobile Menu */
-        .mobile-menu-btn { display: none; font-size: 1.5rem; background: none; border: none; color: inherit; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; background: none; border: none; color: inherit; cursor: pointer; }
         .flex.items-center.gap-4 { display: flex; align-items: center; gap: 1rem; }
         @media (max-width: 768px) {
             .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; flex-direction: column; text-align: center; padding: 1rem 0; background-color: var(--primary-bg); }
@@ -337,8 +389,6 @@
             .about-intro, .contact-wrapper { flex-direction: column; text-align: center; }
             .contact-info { text-align: center; }
             .social-links { justify-content: center; }
-            .cursor-dot, .cursor-outline { display: none; }
-            * { cursor: auto; }
             .scroll-down { bottom: 6rem; } /* Adjust scroll down arrow for mobile */
         }
     </style>
@@ -381,7 +431,7 @@
                 <a href="#" data-page="about" class="btn page-link">Explore My Work</a>
             </div>
             <div class="scroll-down">
-                <a href="#about" class="page-link" data-page="about"><span></span></a>
+                <a href="#" class="page-link" data-page="about"><span></span></a>
             </div>
         </section>
         
@@ -399,32 +449,32 @@
                 
                 <div class="skills-marquee">
                     <div class="skills-track">
-                        <!-- SVG Icons for skills -->
-                        <div class="skill-icon" title="HTML5"><svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438zM8.5 7.75h6.8l-.25 2.5H6.9l.2 2.25h8.1l-.4 4.5-3.85.95-.05-.01-3.8-1.15.25-2.5h2.4l.1 1.25 1.1.35.05.01 1.1-.35.15-1.5H4.2l-.5-5.5h12.6l.4-4H3.35z"/></svg></div>
-                        <div class="skill-icon" title="CSS3"><svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438zM18.5 4.5l-12.5 4.5.5 4h11.5l-.5 4.5-3.5 1-3.5-1-.25-2.5h-2l.5 5 6.25 1.75.05.01L20.5 17l1.5-12.5z"/></svg></div>
-                        <div class="skill-icon" title="JavaScript"><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0zm22.2 2.1c.3.3.4.7.4 1.1v17.6c0 .4-.1.8-.4 1.1-.3.3-.7.4-1.1.4H2.8c-.4 0-.8-.1-1.1-.4-.3-.3-.4-.7-.4-1.1V3.2c0-.4.1-.8.4-1.1.3-.3.7-.4 1.1-.4h18.3c.4 0 .8.1 1.1.4zM16.4 18.3h2.8V9.5h-2.8v8.8zm-5.1-1.2c.4.4.9.7 1.4.9.5.2 1.1.3 1.7.3.7 0 1.4-.1 2-.4.6-.3 1.1-.7 1.5-1.2V9.5h-2.8v6.9c-.2.3-.5.5-.8.6-.3.1-.6.2-.9.2-.4 0-.7-.1-.9-.2-.2-.1-.5-.3-.6-.6V9.5H8.1v7.6c0 .6.1 1.1.4 1.5.3.4.7.7 1.2.9.5.2 1 .3 1.5.3.6 0 1.2-.1 1.7-.4.5-.2.9-.6 1.2-1z"/></svg></div>
-                        <div class="skill-icon" title="Python"><svg viewBox="0 0 24 24"><path d="M16.4 4.3h-4.8V.8h8v3.5h-3.2zM7.6 19.7h4.8v3.5H4.4v-3.5h3.2zM15.1 8.9c0-1.2-1-2.2-2.2-2.2H8.3v4.3h4.6c1.2 0 2.2-1 2.2-2.1zM8.9 15.1c0 1.2 1 2.2 2.2 2.2h4.6v-4.3H11c-1.2 0-2.1 1-2.1 2.1zM17.6 13c.8 0 1.5.7 1.5 1.5v4.3c0 .8-.7 1.5-1.5 1.5h-1.5c-.8 0-1.5-.7-1.5-1.5V13h3zm-11.2-6c-.8 0-1.5-.7-1.5-1.5V1.2c0-.8.7-1.5 1.5-1.5h1.5c.8 0 1.5.7 1.5 1.5v4.3H6.4z"/></svg></div>
-                        <div class="skill-icon" title="React"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5c.3-.3.8-.3 1.1 0l3.3 3.3c.3.3.8.3 1.1 0l3.3-3.3c.3-.3.8-.3 1.1 0s.3.8 0 1.1l-3.8 3.8c-.3.3-.8.3-1.1 0l-3.8-3.8c-.4-.3-.4-.8-.1-1.1zM6.5 8.5c-.3.3-.8.3-1.1 0s-.3-.8 0-1.1l3.8-3.8c.3-.3.8-.3 1.1 0l3.8 3.8c.3.3.3.8 0 1.1s-.8.3-1.1 0L12 5.7 8.7 8.5c-.3.3-.8.3-1.1 0z"/></svg></div>
-                        <div class="skill-icon" title="Node.js"><svg viewBox="0 0 24 24"><path d="M11.7 1.8L1.5 7.7v12l10.2 6 10.2-6v-12l-10.2-6zM12 13.1c-1.2 0-2.2-.9-2.2-2.1 0-1.2.9-2.1 2.2-2.1s2.2.9 2.2 2.1c0 1.2-1 2.1-2.2 2.1z"/></svg></div>
-                        <div class="skill-icon" title="Next.js"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5V9h-3V7.5h4.5v9h-1.5zm6-4.5h-1.5v-2H14v2h-1.5V9h1.5v1.5H16V9h1.5v3z"/></svg></div>
-                        <div class="skill-icon" title="TypeScript"><svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438zM18.5 4.5l-12.5 4.5.5 4h11.5l-.5 4.5-3.5 1-3.5-1-.25-2.5h-2l.5 5 6.25 1.75.05.01L20.5 17l1.5-12.5zM12 10.5V12h3.5v1.5h-5V9H14v1.5z"/></svg></div>
-                        <div class="skill-icon" title="Tailwind CSS"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-3.5 8.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm7 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg></div>
-                        <div class="skill-icon" title="Figma"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm0 9c-2.49 0-4.5-2.01-4.5-4.5S9.51 6.5 12 6.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z"/></svg></div>
-                        <div class="skill-icon" title="Git"><svg viewBox="0 0 24 24"><path d="M21.9 8.9c-.3-.3-.7-.4-1.1-.4H15l-3.3-3.3c-.3-.3-.7-.4-1.1-.4s-.8.1-1.1.4L6 8.5H3.2c-.4 0-.8.1-1.1.4-.3.3-.4.7-.4 1.1v9.8c0 .4.1.8.4 1.1.3.3.7.4 1.1.4h17.6c.4 0 .8-.1 1.1-.4.3-.3.4-.7.4-1.1V10c0-.4-.1-.8-.4-1.1zM12 18.8c-1.6 0-2.9-1.3-2.9-2.9s1.3-2.9 2.9-2.9 2.9 1.3 2.9 2.9-1.3 2.9-2.9 2.9z"/></svg></div>
-                        <div class="skill-icon" title="MongoDB"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.21 0-4-1.79-4-4s1.79-4 4-4c.75 0 1.44.21 2.04.57.6.36 1.11.87 1.43 1.43.36.6.57 1.29.57 2.04 0 2.21-1.79 4-4 4z"/></svg></div>
+                        <!-- Colorful SVG Icons -->
+                        <div class="skill-icon" title="HTML5"><svg viewBox="0 0 128 128"><path fill="#E44D26" d="M10.9 0h106.2l-9.6 108.4L64 128l-54.3-19.6L0 0h10.9z"/><path fill="#F16529" d="M64 119.1V10.9h44.4l-8.2 92.4z"/><path fill="#EBEBEB" d="M64 57.9H32.3l-2.1-23.6H64V10.9H20.6l.3 3.4 3.2 36.3 1.3 14.5H64v-18.1zM64 89.4l-.1.1-18.2-4.9-1.2-13.4H28.1l2.4 26.6 33.4 9.3.1-.1V89.4z"/><path fill="#FFF" d="M63.9 57.9v23.4l18.1-4.9.9-10.3h-11l.4 4.8 6.5 1.8-6.9 1.9v-1.1h13.3l-.1-1.3-1.6-18.2h-18zM63.9 10.9v23.4h22.3l.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3h-24.4z"/></svg></div>
+                        <div class="skill-icon" title="CSS3"><svg viewBox="0 0 128 128"><path fill="#1572B6" d="M10.9 0h106.2l-9.6 108.4L64 128l-54.3-19.6L0 0h10.9z"/><path fill="#33A9DC" d="M64 119.1V10.9h44.4l-8.2 92.4z"/><path fill="#EBEBEB" d="M64 57.9H32.3l-2.1-23.6H64V10.9H20.6l.3 3.4 3.2 36.3 1.3 14.5H64v-18.1zM64 89.4l-.1.1-18.2-4.9-1.2-13.4H28.1l2.4 26.6 33.4 9.3.1-.1V89.4z"/><path fill="#FFF" d="M63.9 57.9v23.4l18.1-4.9.9-10.3h-11l.4 4.8 6.5 1.8-6.9 1.9v-1.1h13.3l-.1-1.3-1.6-18.2h-18zM63.9 10.9v23.4h22.3l.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3h-24.4z"/></svg></div>
+                        <div class="skill-icon" title="JavaScript"><svg viewBox="0 0 128 128"><path fill="#F0DB4F" d="M0 0h128v128H0z"/><path d="M101.8 98.9c1.4-2.7 2.1-5.4 2.1-8.3 0-4.8-1.6-8.8-4.8-12.1-3.2-3.3-7.3-4.9-12.3-4.9-4.3 0-8.1 1.3-11.4 3.8-3.3 2.5-5.5 5.8-6.7 9.8l10.5-2.5c.4-1.6 1.3-2.9 2.7-3.9 1.4-1 3-1.5 4.8-1.5 2.2 0 4 .6 5.4 1.7 1.4 1.2 2.1 2.8 2.1 4.8s-.6 3.5-1.9 4.6c-1.3 1.1-3.1 1.7-5.5 1.7h-3.3l-1.9 6.8h5.2c2.7 0 4.8-.7 6.4-2.1s2.5-3.4 2.7-5.8zm-41.1 1.2c1.5-2.5 2.2-5.1 2.2-7.8s-.7-5.3-2.2-7.8c-1.5-2.5-3.5-4.4-6-5.7-2.5-1.3-5.3-2-8.3-2s-5.8.7-8.3 2c-2.5 1.3-4.5 3.2-6 5.7-1.5 2.5-2.2 5.1-2.2 7.8s.7 5.3 2.2 7.8c1.5 2.5 3.5 4.4 6 5.7 2.5 1.3 5.3 2 8.3 2s5.8-.7 8.3-2c2.5-1.3 4.5-3.2 6-5.7zm-11-12.2c-1-1.6-2.4-2.4-4.1-2.4-1.7 0-3.1.8-4.1 2.4-1 1.6-1.5 3.5-1.5 5.7s.5 4.1 1.5 5.7c1 1.6 2.4 2.4 4.1 2.4 1.7 0 3.1-.8 4.1-2.4 1-1.6 1.5-3.5 1.5-5.7s-.5-4.1-1.5-5.7z"/></svg></div>
+                        <div class="skill-icon" title="Python"><svg viewBox="0 0 24 24"><path fill="#3776AB" d="M16.4 4.3h-4.8V.8h8v3.5h-3.2zM8.9 15.1c0 1.2 1 2.2 2.2 2.2h4.6v-4.3H11c-1.2 0-2.1 1-2.1 2.1zM6.4 7c-.8 0-1.5-.7-1.5-1.5V1.2c0-.8.7-1.5 1.5-1.5h1.5c.8 0 1.5.7 1.5 1.5v4.3H6.4z"/><path fill="#FFD43B" d="M7.6 19.7h4.8v3.5H4.4v-3.5h3.2zM15.1 8.9c0-1.2-1-2.2-2.2-2.2H8.3v4.3h4.6c1.2 0 2.2-1 2.2-2.1zM17.6 13c.8 0 1.5.7 1.5 1.5v4.3c0 .8-.7 1.5-1.5 1.5h-1.5c-.8 0-1.5-.7-1.5-1.5V13h3z"/></svg></div>
+                        <div class="skill-icon" title="React"><svg viewBox="0 0 24 24"><g fill="#61DAFB"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(120 12 12)"/><ellipse cx="12" cy="12" rx="11" ry="4.2"/></g></svg></div>
+                        <div class="skill-icon" title="Node.js"><svg viewBox="0 0 24 24"><path fill="#339933" d="M11.7 1.8L1.5 7.7v12l10.2 6 10.2-6v-12l-10.2-6zM12 13.1c-1.2 0-2.2-.9-2.2-2.1 0-1.2.9-2.1 2.2-2.1s2.2.9 2.2 2.1c0 1.2-1 2.1-2.2 2.1z"/></svg></div>
+                        <div class="skill-icon" title="Next.js"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5V9h-3V7.5h4.5v9h-1.5zm6-4.5h-1.5v-2H14v2h-1.5V9h1.5v1.5H16V9h1.5v3z"/></svg></div>
+                        <div class="skill-icon" title="TypeScript"><svg viewBox="0 0 128 128"><path fill="#007ACC" d="M0 0h128v128H0z"/><path fill="#FFF" d="M23.1 93.3V34.7h13.2v53.4h22.4v5.2H23.1zm58.5-40.4c0-3.4-1.2-6.3-3.7-8.7-2.5-2.4-5.6-3.6-9.4-3.6-4.3 0-7.8 1.4-10.5 4.2s-4 6.7-4 11.6v28.8h13.2V60.1c0-3.3.6-5.8 1.9-7.5 1.3-1.7 3.1-2.5 5.5-2.5 2.4 0 4.2.8 5.5 2.5 1.3 1.7 1.9 4.2 1.9 7.5v28h13.2V52.9z"/></svg></div>
+                        <div class="skill-icon" title="Tailwind CSS"><svg viewBox="0 0 24 24"><path fill="#38BDF8" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-3.5 8.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm7 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg></div>
+                        <div class="skill-icon" title="Figma"><svg viewBox="0 0 24 24"><path fill="#F24E1E" d="M7.5 16.5A1.5 1.5 0 0 1 6 15V9h3v6a1.5 1.5 0 0 1-1.5 1.5z"/><path fill="#FF7262" d="M10.5 16.5a1.5 1.5 0 0 1-1.5-1.5V9h3v6a1.5 1.5 0 0 1-1.5 1.5z"/><path fill="#A259FF" d="M10.5 7.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 1-1.5-1.5z"/><path fill="#1ABCFE" d="M10.5 12a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 0 3h-3A1.5 1.5 0 0 1 10.5 12z"/><path fill="#0ACF83" d="M7.5 7.5A1.5 1.5 0 0 1 9 6h1.5a1.5 1.5 0 1 1 0 3H9a1.5 1.5 0 0 1-1.5-1.5z"/></svg></div>
+                        <div class="skill-icon" title="Git"><svg viewBox="0 0 24 24"><path fill="#F05032" d="M21.9 8.9c-.3-.3-.7-.4-1.1-.4H15l-3.3-3.3c-.3-.3-.7-.4-1.1-.4s-.8.1-1.1.4L6 8.5H3.2c-.4 0-.8.1-1.1.4-.3.3-.4.7-.4 1.1v9.8c0 .4.1.8.4 1.1.3.3.7.4 1.1.4h17.6c.4 0 .8-.1 1.1-.4.3-.3.4-.7.4-1.1V10c0-.4-.1-.8-.4-1.1zM12 18.8c-1.6 0-2.9-1.3-2.9-2.9s1.3-2.9 2.9-2.9 2.9 1.3 2.9 2.9-1.3 2.9-2.9 2.9z"/></svg></div>
+                        <div class="skill-icon" title="MongoDB"><svg viewBox="0 0 24 24"><path fill="#47A248" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.21 0-4-1.79-4-4s1.79-4 4-4c.75 0 1.44.21 2.04.57.6.36 1.11.87 1.43 1.43.36.6.57 1.29.57 2.04 0 2.21-1.79 4-4 4z"/></svg></div>
                         <!-- Duplicated for seamless loop -->
-                        <div class="skill-icon" title="HTML5"><svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438zM8.5 7.75h6.8l-.25 2.5H6.9l.2 2.25h8.1l-.4 4.5-3.85.95-.05-.01-3.8-1.15.25-2.5h2.4l.1 1.25 1.1.35.05.01 1.1-.35.15-1.5H4.2l-.5-5.5h12.6l.4-4H3.35z"/></svg></div>
-                        <div class="skill-icon" title="CSS3"><svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438zM18.5 4.5l-12.5 4.5.5 4h11.5l-.5 4.5-3.5 1-3.5-1-.25-2.5h-2l.5 5 6.25 1.75.05.01L20.5 17l1.5-12.5z"/></svg></div>
-                        <div class="skill-icon" title="JavaScript"><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0V0zm22.2 2.1c.3.3.4.7.4 1.1v17.6c0 .4-.1.8-.4 1.1-.3.3-.7.4-1.1.4H2.8c-.4 0-.8-.1-1.1-.4-.3-.3-.4-.7-.4-1.1V3.2c0-.4.1-.8.4-1.1.3-.3.7-.4 1.1-.4h18.3c.4 0 .8.1 1.1.4zM16.4 18.3h2.8V9.5h-2.8v8.8zm-5.1-1.2c.4.4.9.7 1.4.9.5.2 1.1.3 1.7.3.7 0 1.4-.1 2-.4.6-.3 1.1-.7 1.5-1.2V9.5h-2.8v6.9c-.2.3-.5.5-.8.6-.3.1-.6.2-.9.2-.4 0-.7-.1-.9-.2-.2-.1-.5-.3-.6-.6V9.5H8.1v7.6c0 .6.1 1.1.4 1.5.3.4.7.7 1.2.9.5.2 1 .3 1.5.3.6 0 1.2-.1 1.7-.4.5-.2.9-.6 1.2-1z"/></svg></div>
-                        <div class="skill-icon" title="Python"><svg viewBox="0 0 24 24"><path d="M16.4 4.3h-4.8V.8h8v3.5h-3.2zM7.6 19.7h4.8v3.5H4.4v-3.5h3.2zM15.1 8.9c0-1.2-1-2.2-2.2-2.2H8.3v4.3h4.6c1.2 0 2.2-1 2.2-2.1zM8.9 15.1c0 1.2 1 2.2 2.2 2.2h4.6v-4.3H11c-1.2 0-2.1 1-2.1 2.1zM17.6 13c.8 0 1.5.7 1.5 1.5v4.3c0 .8-.7 1.5-1.5 1.5h-1.5c-.8 0-1.5-.7-1.5-1.5V13h3zm-11.2-6c-.8 0-1.5-.7-1.5-1.5V1.2c0-.8.7-1.5 1.5-1.5h1.5c.8 0 1.5.7 1.5 1.5v4.3H6.4z"/></svg></div>
-                        <div class="skill-icon" title="React"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5c.3-.3.8-.3 1.1 0l3.3 3.3c.3.3.8.3 1.1 0l3.3-3.3c.3-.3.8-.3 1.1 0s.3.8 0 1.1l-3.8 3.8c-.3.3-.8.3-1.1 0l-3.8-3.8c-.4-.3-.4-.8-.1-1.1zM6.5 8.5c-.3.3-.8.3-1.1 0s-.3-.8 0-1.1l3.8-3.8c.3-.3.8-.3 1.1 0l3.8 3.8c.3.3.3.8 0 1.1s-.8.3-1.1 0L12 5.7 8.7 8.5c-.3.3-.8.3-1.1 0z"/></svg></div>
-                        <div class="skill-icon" title="Node.js"><svg viewBox="0 0 24 24"><path d="M11.7 1.8L1.5 7.7v12l10.2 6 10.2-6v-12l-10.2-6zM12 13.1c-1.2 0-2.2-.9-2.2-2.1 0-1.2.9-2.1 2.2-2.1s2.2.9 2.2 2.1c0 1.2-1 2.1-2.2 2.1z"/></svg></div>
-                        <div class="skill-icon" title="Next.js"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5V9h-3V7.5h4.5v9h-1.5zm6-4.5h-1.5v-2H14v2h-1.5V9h1.5v1.5H16V9h1.5v3z"/></svg></div>
-                        <div class="skill-icon" title="TypeScript"><svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438zM18.5 4.5l-12.5 4.5.5 4h11.5l-.5 4.5-3.5 1-3.5-1-.25-2.5h-2l.5 5 6.25 1.75.05.01L20.5 17l1.5-12.5zM12 10.5V12h3.5v1.5h-5V9H14v1.5z"/></svg></div>
-                        <div class="skill-icon" title="Tailwind CSS"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-3.5 8.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm7 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg></div>
-                        <div class="skill-icon" title="Figma"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zm0 9c-2.49 0-4.5-2.01-4.5-4.5S9.51 6.5 12 6.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z"/></svg></div>
-                        <div class="skill-icon" title="Git"><svg viewBox="0 0 24 24"><path d="M21.9 8.9c-.3-.3-.7-.4-1.1-.4H15l-3.3-3.3c-.3-.3-.7-.4-1.1-.4s-.8.1-1.1.4L6 8.5H3.2c-.4 0-.8.1-1.1.4-.3.3-.4.7-.4 1.1v9.8c0 .4.1.8.4 1.1.3.3.7.4 1.1.4h17.6c.4 0 .8-.1 1.1-.4.3-.3.4-.7.4-1.1V10c0-.4-.1-.8-.4-1.1zM12 18.8c-1.6 0-2.9-1.3-2.9-2.9s1.3-2.9 2.9-2.9 2.9 1.3 2.9 2.9-1.3 2.9-2.9 2.9z"/></svg></div>
-                        <div class="skill-icon" title="MongoDB"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.21 0-4-1.79-4-4s1.79-4 4-4c.75 0 1.44.21 2.04.57.6.36 1.11.87 1.43 1.43.36.6.57 1.29.57 2.04 0 2.21-1.79 4-4 4z"/></svg></div>
+                        <div class="skill-icon" title="HTML5"><svg viewBox="0 0 128 128"><path fill="#E44D26" d="M10.9 0h106.2l-9.6 108.4L64 128l-54.3-19.6L0 0h10.9z"/><path fill="#F16529" d="M64 119.1V10.9h44.4l-8.2 92.4z"/><path fill="#EBEBEB" d="M64 57.9H32.3l-2.1-23.6H64V10.9H20.6l.3 3.4 3.2 36.3 1.3 14.5H64v-18.1zM64 89.4l-.1.1-18.2-4.9-1.2-13.4H28.1l2.4 26.6 33.4 9.3.1-.1V89.4z"/><path fill="#FFF" d="M63.9 57.9v23.4l18.1-4.9.9-10.3h-11l.4 4.8 6.5 1.8-6.9 1.9v-1.1h13.3l-.1-1.3-1.6-18.2h-18zM63.9 10.9v23.4h22.3l.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3h-24.4z"/></svg></div>
+                        <div class="skill-icon" title="CSS3"><svg viewBox="0 0 128 128"><path fill="#1572B6" d="M10.9 0h106.2l-9.6 108.4L64 128l-54.3-19.6L0 0h10.9z"/><path fill="#33A9DC" d="M64 119.1V10.9h44.4l-8.2 92.4z"/><path fill="#EBEBEB" d="M64 57.9H32.3l-2.1-23.6H64V10.9H20.6l.3 3.4 3.2 36.3 1.3 14.5H64v-18.1zM64 89.4l-.1.1-18.2-4.9-1.2-13.4H28.1l2.4 26.6 33.4 9.3.1-.1V89.4z"/><path fill="#FFF" d="M63.9 57.9v23.4l18.1-4.9.9-10.3h-11l.4 4.8 6.5 1.8-6.9 1.9v-1.1h13.3l-.1-1.3-1.6-18.2h-18zM63.9 10.9v23.4h22.3l.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3.3-3.4.2-2.3.2-2.3h-24.4z"/></svg></div>
+                        <div class="skill-icon" title="JavaScript"><svg viewBox="0 0 128 128"><path fill="#F0DB4F" d="M0 0h128v128H0z"/><path d="M101.8 98.9c1.4-2.7 2.1-5.4 2.1-8.3 0-4.8-1.6-8.8-4.8-12.1-3.2-3.3-7.3-4.9-12.3-4.9-4.3 0-8.1 1.3-11.4 3.8-3.3 2.5-5.5 5.8-6.7 9.8l10.5-2.5c.4-1.6 1.3-2.9 2.7-3.9 1.4-1 3-1.5 4.8-1.5 2.2 0 4 .6 5.4 1.7 1.4 1.2 2.1 2.8 2.1 4.8s-.6 3.5-1.9 4.6c-1.3 1.1-3.1 1.7-5.5 1.7h-3.3l-1.9 6.8h5.2c2.7 0 4.8-.7 6.4-2.1s2.5-3.4 2.7-5.8zm-41.1 1.2c1.5-2.5 2.2-5.1 2.2-7.8s-.7-5.3-2.2-7.8c-1.5-2.5-3.5-4.4-6-5.7-2.5-1.3-5.3-2-8.3-2s-5.8.7-8.3 2c-2.5 1.3-4.5 3.2-6 5.7-1.5 2.5-2.2 5.1-2.2 7.8s.7 5.3 2.2 7.8c1.5 2.5 3.5 4.4 6 5.7 2.5 1.3 5.3 2 8.3 2s5.8-.7 8.3-2c2.5-1.3 4.5-3.2 6-5.7zm-11-12.2c-1-1.6-2.4-2.4-4.1-2.4-1.7 0-3.1.8-4.1 2.4-1 1.6-1.5 3.5-1.5 5.7s.5 4.1 1.5 5.7c1 1.6 2.4 2.4 4.1 2.4 1.7 0 3.1-.8 4.1-2.4 1-1.6 1.5-3.5 1.5-5.7s-.5-4.1-1.5-5.7z"/></svg></div>
+                        <div class="skill-icon" title="Python"><svg viewBox="0 0 24 24"><path fill="#3776AB" d="M16.4 4.3h-4.8V.8h8v3.5h-3.2zM8.9 15.1c0 1.2 1 2.2 2.2 2.2h4.6v-4.3H11c-1.2 0-2.1 1-2.1 2.1zM6.4 7c-.8 0-1.5-.7-1.5-1.5V1.2c0-.8.7-1.5 1.5-1.5h1.5c.8 0 1.5.7 1.5 1.5v4.3H6.4z"/><path fill="#FFD43B" d="M7.6 19.7h4.8v3.5H4.4v-3.5h3.2zM15.1 8.9c0-1.2-1-2.2-2.2-2.2H8.3v4.3h4.6c1.2 0 2.2-1 2.2-2.1zM17.6 13c.8 0 1.5.7 1.5 1.5v4.3c0 .8-.7 1.5-1.5 1.5h-1.5c-.8 0-1.5-.7-1.5-1.5V13h3z"/></svg></div>
+                        <div class="skill-icon" title="React"><svg viewBox="0 0 24 24"><g fill="#61DAFB"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="11" ry="4.2" transform="rotate(120 12 12)"/><ellipse cx="12" cy="12" rx="11" ry="4.2"/></g></svg></div>
+                        <div class="skill-icon" title="Node.js"><svg viewBox="0 0 24 24"><path fill="#339933" d="M11.7 1.8L1.5 7.7v12l10.2 6 10.2-6v-12l-10.2-6zM12 13.1c-1.2 0-2.2-.9-2.2-2.1 0-1.2.9-2.1 2.2-2.1s2.2.9 2.2 2.1c0 1.2-1 2.1-2.2 2.1z"/></svg></div>
+                        <div class="skill-icon" title="Next.js"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5V9h-3V7.5h4.5v9h-1.5zm6-4.5h-1.5v-2H14v2h-1.5V9h1.5v1.5H16V9h1.5v3z"/></svg></div>
+                        <div class="skill-icon" title="TypeScript"><svg viewBox="0 0 128 128"><path fill="#007ACC" d="M0 0h128v128H0z"/><path fill="#FFF" d="M23.1 93.3V34.7h13.2v53.4h22.4v5.2H23.1zm58.5-40.4c0-3.4-1.2-6.3-3.7-8.7-2.5-2.4-5.6-3.6-9.4-3.6-4.3 0-7.8 1.4-10.5 4.2s-4 6.7-4 11.6v28.8h13.2V60.1c0-3.3.6-5.8 1.9-7.5 1.3-1.7 3.1-2.5 5.5-2.5 2.4 0 4.2.8 5.5 2.5 1.3 1.7 1.9 4.2 1.9 7.5v28h13.2V52.9z"/></svg></div>
+                        <div class="skill-icon" title="Tailwind CSS"><svg viewBox="0 0 24 24"><path fill="#38BDF8" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-3.5 8.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm7 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/></svg></div>
+                        <div class="skill-icon" title="Figma"><svg viewBox="0 0 24 24"><path fill="#F24E1E" d="M7.5 16.5A1.5 1.5 0 0 1 6 15V9h3v6a1.5 1.5 0 0 1-1.5 1.5z"/><path fill="#FF7262" d="M10.5 16.5a1.5 1.5 0 0 1-1.5-1.5V9h3v6a1.5 1.5 0 0 1-1.5 1.5z"/><path fill="#A259FF" d="M10.5 7.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 1-1.5-1.5z"/><path fill="#1ABCFE" d="M10.5 12a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 0 3h-3A1.5 1.5 0 0 1 10.5 12z"/><path fill="#0ACF83" d="M7.5 7.5A1.5 1.5 0 0 1 9 6h1.5a1.5 1.5 0 1 1 0 3H9a1.5 1.5 0 0 1-1.5-1.5z"/></svg></div>
+                        <div class="skill-icon" title="Git"><svg viewBox="0 0 24 24"><path fill="#F05032" d="M21.9 8.9c-.3-.3-.7-.4-1.1-.4H15l-3.3-3.3c-.3-.3-.7-.4-1.1-.4s-.8.1-1.1.4L6 8.5H3.2c-.4 0-.8.1-1.1.4-.3.3-.4.7-.4 1.1v9.8c0 .4.1.8.4 1.1.3.3.7.4 1.1.4h17.6c.4 0 .8-.1 1.1-.4.3-.3.4-.7.4-1.1V10c0-.4-.1-.8-.4-1.1zM12 18.8c-1.6 0-2.9-1.3-2.9-2.9s1.3-2.9 2.9-2.9 2.9 1.3 2.9 2.9-1.3 2.9-2.9 2.9z"/></svg></div>
+                        <div class="skill-icon" title="MongoDB"><svg viewBox="0 0 24 24"><path fill="#47A248" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.21 0-4-1.79-4-4s1.79-4 4-4c.75 0 1.44.21 2.04.57.6.36 1.11.87 1.43 1.43.36.6.57 1.29.57 2.04 0 2.21-1.79 4-4 4z"/></svg></div>
                     </div>
                 </div>
 
@@ -462,8 +512,14 @@
         <section id="projects" data-page="projects" class="projects-section">
             <div class="container">
                 <h1>My Work</h1>
+                <div class="project-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="webapp">Web App</button>
+                    <button class="filter-btn" data-filter="uiux">UI/UX Design</button>
+                    <button class="filter-btn" data-filter="mobile">Mobile App</button>
+                </div>
                 <div class="project-grid">
-                    <div class="project-card">
+                    <div class="project-card" data-category="webapp">
                         <img src="https://placehold.co/600x400/d8b4fe/1e293b?text=Project+A" alt="Project A" onerror="this.onerror=null;this.src='https://placehold.co/600x400/d8b4fe/1e293b?text=Project+A';">
                         <div class="project-content">
                             <h3>E-commerce Platform</h3>
@@ -471,7 +527,7 @@
                             <a href="#">View Case Study &rarr;</a>
                         </div>
                     </div>
-                    <div class="project-card">
+                    <div class="project-card" data-category="uiux">
                         <img src="https://placehold.co/600x400/a5b4fc/1e293b?text=Project+B" alt="Project B" onerror="this.onerror=null;this.src='https://placehold.co/600x400/a5b4fc/1e293b?text=Project+B';">
                         <div class="project-content">
                             <h3>Portfolio Website Template</h3>
@@ -479,12 +535,36 @@
                             <a href="#">View on GitHub &rarr;</a>
                         </div>
                     </div>
-                    <div class="project-card">
+                    <div class="project-card" data-category="webapp">
                         <img src="https://placehold.co/600x400/93c5fd/1e293b?text=Project+C" alt="Project C" onerror="this.onerror=null;this.src='https://placehold.co/600x400/93c5fd/1e293b?text=Project+C';">
                         <div class="project-content">
                             <h3>Task Management App</h3>
                             <p>A productivity app with a clean UI, built with React and featuring drag-and-drop functionality.</p>
                             <a href="#">Try The App &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="project-card" data-category="mobile">
+                        <img src="https://placehold.co/600x400/fca5a5/1e293b?text=Project+D" alt="Project D" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fca5a5/1e293b?text=Project+D';">
+                        <div class="project-content">
+                            <h3>Fitness Tracker Mobile App</h3>
+                            <p>A cross-platform mobile app built with React Native to track workouts and nutrition.</p>
+                            <a href="#">View on App Store &rarr;</a>
+                        </div>
+                    </div>
+                     <div class="project-card" data-category="uiux">
+                        <img src="https://placehold.co/600x400/fde047/1e293b?text=Project+E" alt="Project E" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fde047/1e293b?text=Project+E';">
+                        <div class="project-content">
+                            <h3>SaaS Dashboard UI Kit</h3>
+                            <p>A comprehensive UI kit designed in Figma for a modern software-as-a-service application.</p>
+                            <a href="#">View on Figma &rarr;</a>
+                        </div>
+                    </div>
+                     <div class="project-card" data-category="mobile">
+                        <img src="https://placehold.co/600x400/a78bfa/1e293b?text=Project+F" alt="Project F" onerror="this.onerror=null;this.src='https://placehold.co/600x400/a78bfa/1e293b?text=Project+F';">
+                        <div class="project-content">
+                            <h3>Recipe Discovery App</h3>
+                            <p>A native mobile app for finding and saving recipes, with a focus on a clean user experience.</p>
+                            <a href="#">View on Play Store &rarr;</a>
                         </div>
                     </div>
                 </div>
@@ -559,6 +639,8 @@
             const backToTopBtn = document.getElementById('back-to-top');
             const resumeBtn = document.getElementById('resume-btn');
             const contactForm = document.getElementById('contact-form');
+            const projectFilters = document.querySelector('.project-filters');
+            const projectCards = document.querySelectorAll('.project-card');
 
             // --- Resume Download ---
             if (resumeBtn) {
@@ -598,18 +680,62 @@
                 });
             }
 
+            // --- Project Filtering ---
+            if (projectFilters) {
+                projectFilters.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'BUTTON') return;
+
+                    const filter = e.target.dataset.filter;
+
+                    projectFilters.querySelector('.active').classList.remove('active');
+                    e.target.classList.add('active');
+
+                    projectCards.forEach(card => {
+                        const category = card.dataset.category;
+                        const shouldShow = filter === 'all' || filter === category;
+                        
+                        card.style.display = 'block'; // Reset display property for animation
+                        setTimeout(() => {
+                           if (shouldShow) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        }, 10);
+                        
+                        card.addEventListener('transitionend', () => {
+                            if (card.classList.contains('hidden')) {
+                                card.style.display = 'none';
+                            }
+                        }, { once: true });
+                    });
+                });
+            }
+
 
             // --- Page Navigation ---
             function showPage(pageId) {
-                mainContent.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-                const targetPage = document.getElementById(pageId);
-                if (targetPage) targetPage.classList.add('active');
+                const currentPage = mainContent.querySelector('section.active');
+                const nextPage = document.getElementById(pageId);
+
+                if (currentPage && nextPage && currentPage !== nextPage) {
+                    currentPage.classList.add('exiting');
+                    currentPage.addEventListener('animationend', () => {
+                        currentPage.classList.remove('active', 'exiting');
+                        nextPage.classList.add('active');
+                        window.scrollTo(0, 0);
+                    }, { once: true });
+                } else if (nextPage) {
+                     mainContent.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+                     nextPage.classList.add('active');
+                     window.scrollTo(0, 0);
+                }
+
                 navLinksContainer.querySelectorAll('a').forEach(l => {
                     l.classList.remove('active');
                     if (l.dataset.page === pageId) l.classList.add('active');
                 });
                 navLinksContainer.classList.remove('active');
-                window.scrollTo(0, 0);
             }
 
             pageLinks.forEach(link => {
@@ -645,18 +771,38 @@
             });
             backToTopBtn.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-            // --- Custom Cursor ---
-            window.addEventListener('mousemove', e => {
-                const { clientX: x, clientY: y } = e;
-                cursorDot.style.left = `${x}px`;
-                cursorDot.style.top = `${y}px`;
-                cursorOutline.style.left = `${x}px`;
-                cursorOutline.style.top = `${y}px`;
-            });
-            document.querySelectorAll('a, button, .btn, .theme-switcher').forEach(el => {
-                el.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
-                el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
-            });
+            // --- Stylish Cursor ---
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            if (!isTouchDevice) {
+                let mouseX = 0, mouseY = 0;
+                let outlineX = 0, outlineY = 0;
+
+                window.addEventListener('mousemove', e => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                });
+
+                const animateCursor = () => {
+                    let distX = mouseX - outlineX;
+                    let distY = mouseY - outlineY;
+
+                    outlineX += distX * 0.1;
+                    outlineY += distY * 0.1;
+
+                    cursorDot.style.left = `${mouseX}px`;
+                    cursorDot.style.top = `${mouseY}px`;
+                    cursorOutline.style.left = `${outlineX}px`;
+                    cursorOutline.style.top = `${outlineY}px`;
+
+                    requestAnimationFrame(animateCursor);
+                };
+                animateCursor();
+
+                document.querySelectorAll('a, button, .btn, .theme-switcher, .filter-btn').forEach(el => {
+                    el.addEventListener('mouseenter', () => cursorOutline.classList.add('hover'));
+                    el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hover'));
+                });
+            }
             
             // --- Animated Stats Counter ---
             const statsSection = document.getElementById('stats-section');
@@ -701,14 +847,15 @@
                 const mouse = { x: null, y: null, radius: (canvas.height / 120) * (canvas.width / 120) };
                 
                 const touchHandler = (e) => {
-                    e.preventDefault();
-                    mouse.x = e.touches[0].clientX;
-                    mouse.y = e.touches[0].clientY;
+                    if(e.touches.length > 0) {
+                        mouse.x = e.touches[0].clientX;
+                        mouse.y = e.touches[0].clientY;
+                    }
                 }
                 
                 window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-                window.addEventListener('touchmove', touchHandler, { passive: false });
-                window.addEventListener('touchstart', touchHandler, { passive: false });
+                window.addEventListener('touchmove', touchHandler);
+                window.addEventListener('touchstart', touchHandler);
 
                 window.addEventListener('resize', () => {
                     canvas.width = window.innerWidth;
