@@ -26,6 +26,10 @@
             cursor: none;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             transition: background-color 0.5s, color 0.5s;
@@ -125,8 +129,36 @@
         }
 
         #hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .hero-content h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
-        .hero-content p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 2rem; color: #a0aec0; }
+        
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-content h1 .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slide-up 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        
+        @keyframes slide-up {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content p { 
+            font-size: 1.25rem; 
+            max-width: 600px; 
+            margin: 0 auto 2rem; 
+            color: #a0aec0;
+            opacity: 0;
+            animation: fadeIn 1s ease 1s forwards;
+        }
         body.light-mode .hero-content p { color: #4a5568; }
 
         .btn {
@@ -139,34 +171,41 @@
             font-weight: 600;
             transition: background-color 0.3s, transform 0.3s;
             border: none;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.5s forwards;
         }
         .btn:hover { background-color: var(--accent-hover); transform: scale(1.05); }
 
-        /* Scrolling Text Banner */
-        .scrolling-text-banner {
-            width: 100%;
+        /* Scroll Down Indicator */
+        .scroll-down {
             position: absolute;
-            bottom: 0;
-            padding: 1rem 0;
-            background-color: rgba(0,0,0,0.2);
-            overflow: hidden;
-            white-space: nowrap;
+            bottom: 2rem;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
         }
-        .scrolling-text-content {
-            display: inline-block;
-            animation: scroll-text 20s linear infinite;
+        .scroll-down a {
+            display: block;
+            padding-top: 60px;
         }
-        .scrolling-text-content span {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin: 0 2rem;
-            color: #a0aec0;
-            text-transform: uppercase;
+        .scroll-down a span {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            margin-left: -12px;
+            border-left: 2px solid var(--text-color);
+            border-bottom: 2px solid var(--text-color);
+            transform: rotate(-45deg);
+            animation: scroll-bounce 2s infinite;
+            box-sizing: border-box;
         }
-        @keyframes scroll-text {
-            from { transform: translateX(0%); }
-            to { transform: translateX(-50%); }
+        @keyframes scroll-bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(-45deg); }
+            40% { transform: translateY(-20px) rotate(-45deg); }
+            60% { transform: translateY(-10px) rotate(-45deg); }
         }
+
 
         /* About Page */
         .about-section, .projects-section, .contact-section { padding: 8rem 0 4rem; }
@@ -300,6 +339,7 @@
             .social-links { justify-content: center; }
             .cursor-dot, .cursor-outline { display: none; }
             * { cursor: auto; }
+            .scroll-down { bottom: 6rem; } /* Adjust scroll down arrow for mobile */
         }
     </style>
 </head>
@@ -330,15 +370,18 @@
         <section id="home" data-page="home" class="active">
             <canvas id="hero-bg"></canvas>
             <div class="hero-content">
-                <h1>Creative Developer & Digital Designer</h1>
+                <h1 id="hero-headline">
+                    <span class="word">Creative</span>
+                    <span class="word">Developer</span>
+                    <span class="word">&</span>
+                    <span class="word">Digital</span>
+                    <span class="word">Designer</span>
+                </h1>
                 <p>I build modern, responsive, and user-friendly web applications, bringing ideas to life through code and creativity.</p>
-                <a href="#" data-page="about" class="btn page-link">Learn More About Me</a>
+                <a href="#" data-page="about" class="btn page-link">Explore My Work</a>
             </div>
-            <div class="scrolling-text-banner">
-                <div class="scrolling-text-content">
-                    <span>Inspire</span><span>Think</span><span>Design</span><span>Code</span><span>Verify</span><span>Deploy</span>
-                    <span>Inspire</span><span>Think</span><span>Design</span><span>Code</span><span>Verify</span><span>Deploy</span>
-                </div>
+            <div class="scroll-down">
+                <a href="#about" class="page-link" data-page="about"><span></span></a>
             </div>
         </section>
         
@@ -656,7 +699,17 @@
                 canvas.height = window.innerHeight;
                 let particlesArray;
                 const mouse = { x: null, y: null, radius: (canvas.height / 120) * (canvas.width / 120) };
-                window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
+                
+                const touchHandler = (e) => {
+                    e.preventDefault();
+                    mouse.x = e.touches[0].clientX;
+                    mouse.y = e.touches[0].clientY;
+                }
+                
+                window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+                window.addEventListener('touchmove', touchHandler, { passive: false });
+                window.addEventListener('touchstart', touchHandler, { passive: false });
+
                 window.addEventListener('resize', () => {
                     canvas.width = window.innerWidth;
                     canvas.height = window.innerHeight;
@@ -664,6 +717,7 @@
                     init();
                 });
                 window.addEventListener('mouseout', () => { mouse.x = undefined; mouse.y = undefined; });
+                window.addEventListener('touchend', () => { mouse.x = undefined; mouse.y = undefined; });
 
                 class Particle {
                     constructor(x, y, dX, dY, s, c) { this.x=x; this.y=y; this.directionX=dX; this.directionY=dY; this.size=s; this.color=c; }
@@ -683,7 +737,7 @@
                 }
                 function init() {
                     particlesArray = [];
-                    let num = (canvas.height * canvas.width) / 9000;
+                    let num = (canvas.height * canvas.width) / (window.innerWidth < 768 ? 20000 : 9000); // Fewer particles on mobile
                     let theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
                     let pColor = theme === 'dark' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.5)';
                     for (let i = 0; i < num; i++) {
@@ -713,9 +767,18 @@
                 init(); animate();
             }
 
+            // --- Animate Headline ---
+            function animateHeadline() {
+                const words = document.querySelectorAll('#hero-headline .word');
+                words.forEach((word, index) => {
+                    word.style.animationDelay = `${index * 0.2}s`;
+                });
+            }
+
             // Initial Load
             showPage('home');
             if (document.getElementById('hero-bg')) initCanvasBackground();
+            animateHeadline();
         });
     </script>
 </body>
