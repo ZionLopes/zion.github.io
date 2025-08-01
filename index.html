@@ -307,7 +307,17 @@
             pointer-events: none;
         }
         .project-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-        .project-card img { width: 100%; height: 200px; object-fit: cover; }
+        .project-image-container {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            background-color: var(--border-color);
+        }
+        .project-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .project-content { padding: 1.5rem; }
         .project-content h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
         .project-content p { color: #a0aec0; margin-bottom: 1rem; }
@@ -540,52 +550,66 @@
                     <button class="filter-btn" data-filter="mobile">Mobile App</button>
                 </div>
                 <div class="project-grid">
-                    <div class="expense-tracker" data-category="webapp">
-                        <img src="expense tracker.png" alt="Project A" onerror="this.onerror=null;this.src='https://placehold.co/600x400/d8b4fe/1e293b?text=Project+A';">
+                    <div class="project-card" data-category="webapp">
+                        <div class="project-image-container">
+                            <!-- INSTRUCTION: Replace the src below with your project image URL -->
+                            <img src="https://placehold.co/600x400/d8b4fe/1e293b?text=Project+A" alt="Project A" onerror="this.onerror=null;this.src='https://placehold.co/600x400/d8b4fe/1e293b?text=Project+A';">
+                        </div>
                         <div class="project-content">
                             <h3>E-commerce Platform</h3>
                             <p>A full-featured online store built with the MERN stack, including payment integration.</p>
-                            <a href="https://zionlopes.github.io/expense-tracker/">View Case Study &rarr;</a>
+                            <!-- INSTRUCTION: Replace the # below with your project link -->
+                            <a href="#" target="_blank">View Case Study &rarr;</a>
                         </div>
                     </div>
                     <div class="project-card" data-category="uiux">
-                        <img src="https://placehold.co/600x400/a5b4fc/1e293b?text=Project+B" alt="Project B" onerror="this.onerror=null;this.src='https://placehold.co/600x400/a5b4fc/1e293b?text=Project+B';">
+                        <div class="project-image-container">
+                            <img src="https://placehold.co/600x400/a5b4fc/1e293b?text=Project+B" alt="Project B" onerror="this.onerror=null;this.src='https://placehold.co/600x400/a5b4fc/1e293b?text=Project+B';">
+                        </div>
                         <div class="project-content">
                             <h3>Portfolio Website Template</h3>
                             <p>A sleek, animated, and responsive portfolio template for creative professionals.</p>
-                            <a href="#">View on GitHub &rarr;</a>
+                            <a href="#" target="_blank">View on GitHub &rarr;</a>
                         </div>
                     </div>
                     <div class="project-card" data-category="webapp">
-                        <img src="https://placehold.co/600x400/93c5fd/1e293b?text=Project+C" alt="Project C" onerror="this.onerror=null;this.src='https://placehold.co/600x400/93c5fd/1e293b?text=Project+C';">
+                        <div class="project-image-container">
+                            <img src="https://placehold.co/600x400/93c5fd/1e293b?text=Project+C" alt="Project C" onerror="this.onerror=null;this.src='https://placehold.co/600x400/93c5fd/1e293b?text=Project+C';">
+                        </div>
                         <div class="project-content">
                             <h3>Task Management App</h3>
                             <p>A productivity app with a clean UI, built with React and featuring drag-and-drop functionality.</p>
-                            <a href="#">Try The App &rarr;</a>
+                            <a href="#" target="_blank">Try The App &rarr;</a>
                         </div>
                     </div>
                     <div class="project-card" data-category="mobile">
-                        <img src="https://placehold.co/600x400/fca5a5/1e293b?text=Project+D" alt="Project D" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fca5a5/1e293b?text=Project+D';">
+                        <div class="project-image-container">
+                            <img src="https://placehold.co/600x400/fca5a5/1e293b?text=Project+D" alt="Project D" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fca5a5/1e293b?text=Project+D';">
+                        </div>
                         <div class="project-content">
                             <h3>Fitness Tracker Mobile App</h3>
                             <p>A cross-platform mobile app built with React Native to track workouts and nutrition.</p>
-                            <a href="#">View on App Store &rarr;</a>
+                            <a href="#" target="_blank">View on App Store &rarr;</a>
                         </div>
                     </div>
                      <div class="project-card" data-category="uiux">
-                        <img src="https://placehold.co/600x400/fde047/1e293b?text=Project+E" alt="Project E" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fde047/1e293b?text=Project+E';">
+                        <div class="project-image-container">
+                            <img src="https://placehold.co/600x400/fde047/1e293b?text=Project+E" alt="Project E" onerror="this.onerror=null;this.src='https://placehold.co/600x400/fde047/1e293b?text=Project+E';">
+                        </div>
                         <div class="project-content">
                             <h3>SaaS Dashboard UI Kit</h3>
                             <p>A comprehensive UI kit designed in Figma for a modern software-as-a-service application.</p>
-                            <a href="#">View on Figma &rarr;</a>
+                            <a href="#" target="_blank">View on Figma &rarr;</a>
                         </div>
                     </div>
                      <div class="project-card" data-category="mobile">
-                        <img src="https://placehold.co/600x400/a78bfa/1e293b?text=Project+F" alt="Project F" onerror="this.onerror=null;this.src='https://placehold.co/600x400/a78bfa/1e293b?text=Project+F';">
+                        <div class="project-image-container">
+                            <img src="https://placehold.co/600x400/a78bfa/1e293b?text=Project+F" alt="Project F" onerror="this.onerror=null;this.src='https://placehold.co/600x400/a78bfa/1e293b?text=Project+F';">
+                        </div>
                         <div class="project-content">
                             <h3>Recipe Discovery App</h3>
                             <p>A native mobile app for finding and saving recipes, with a focus on a clean user experience.</p>
-                            <a href="#">View on Play Store &rarr;</a>
+                            <a href="#" target="_blank">View on Play Store &rarr;</a>
                         </div>
                     </div>
                 </div>
